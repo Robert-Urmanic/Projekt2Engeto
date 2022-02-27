@@ -76,20 +76,30 @@ public class Main {
     }
 
     public static void printTop3(List<Country> listOfCountries) {
+        int top3 = 3;
         Collections.sort(listOfCountries, (o1, o2) -> {
             return (o2.getStandard_rate().subtract(o1.getStandard_rate())).intValue();
         });
-        for (int i = 0; i < 3; i++) {
-            System.out.println(listOfCountries.get(i));
+        for (int i = 0; i < top3; i++) {
+            if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
+                System.out.println(listOfCountries.get(i));
+            } else{
+                top3++;
+            }
         }
     }
 
     public static void printLow3(List<Country> listOfCountries) {
+        int low3 = 3;
         Collections.sort(listOfCountries, (o1, o2) -> {
             return (o1.getStandard_rate().subtract(o2.getStandard_rate())).intValue();
         });
-        for (int i = 0; i < 3; i++) {
-            System.out.println(listOfCountries.get(i));
+        for (int i = 0; i < low3; i++) {
+            if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
+                System.out.println(listOfCountries.get(i));
+            } else{
+                low3++;
+            }
         }
     }
 

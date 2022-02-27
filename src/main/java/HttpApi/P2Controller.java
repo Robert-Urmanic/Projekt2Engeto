@@ -17,14 +17,7 @@ public class P2Controller {
 
     @GetMapping(value = "/api/searchTop3")
     public String searchTop3() {
-        List<Country> listOfCountries = new ArrayList<>();
-        try {
-            LoadJson.loadFile(listOfCountries);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        List<Country> listOfCountries = getCountries();
         Main.printTop3(listOfCountries);
         String top3countries = "";
         for (int i = 0; i < 3; i++) {
@@ -33,8 +26,7 @@ public class P2Controller {
         return top3countries;
     }
 
-    @GetMapping(value = "/api/searchLow3")
-    public String searchLow3() {
+    private List<Country> getCountries() {
         List<Country> listOfCountries = new ArrayList<>();
         try {
             LoadJson.loadFile(listOfCountries);
@@ -43,6 +35,12 @@ public class P2Controller {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return listOfCountries;
+    }
+
+    @GetMapping(value = "/api/searchLow3")
+    public String searchLow3() {
+        List<Country> listOfCountries = getCountries();
         Main.printLow3(listOfCountries);
         String low3countries = "";
         for (int i = 0; i < 3; i++) {
@@ -53,14 +51,7 @@ public class P2Controller {
 
     @GetMapping(value = "/api/searchByAbbrev/{abbrev}")
     public String searchByAbbrev(@PathVariable String abbrev) {
-        List<Country> listOfCountries = new ArrayList<>();
-        try {
-            LoadJson.loadFile(listOfCountries);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        List<Country> listOfCountries = getCountries();
         String returnValue = "";
         for (Country tempC : listOfCountries) {
             if (tempC.getAbbreviation().equals(abbrev.toUpperCase(Locale.ROOT))) {
