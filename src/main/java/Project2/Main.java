@@ -15,29 +15,23 @@ public class Main {
                 String choice = scanner.nextLine();
                 switch (choice.toUpperCase(Locale.ROOT)) {
                     case "SEARCH TOP 3":
-                        printTop3(listOfCountries);
+                        String top3countries = "";
+                        printTop3(listOfCountries, top3countries);
                         System.out.println("Do you want to save these countries into a .txt file? Y/n");
                         choice = scanner.nextLine();
                         if ("Y".equals(choice.toUpperCase(Locale.ROOT))) {
-                            String top3countries = "";
-                            for (int i = 0; i < 3; i++) {
-                                top3countries += listOfCountries.get(i);
-                            }
                             FileCreation.setFile(top3countries, "top3Countries");
                             break;
                         }
                         System.out.println("File wasn't created.\n");
                         break;
                     case "SEARCH LOW 3":
-                        printLow3(listOfCountries);
+                        String low3countries = "";
+                        printLow3(listOfCountries, low3countries);
                         System.out.println("Do you want to save these countries into a .txt file? Y/n");
                         choice = scanner.nextLine();
                         if ("Y".equals(choice.toUpperCase(Locale.ROOT))) {
-                            String top3countries = "";
-                            for (int i = 0; i < 3; i++) {
-                                top3countries += listOfCountries.get(i);
-                            }
-                            FileCreation.setFile(top3countries, "low3Countries");
+                            FileCreation.setFile(low3countries, "low3Countries");
                             break;
                         }
                         System.out.println("File wasn't created.\n");
@@ -75,7 +69,7 @@ public class Main {
         }
     }
 
-    public static void printTop3(List<Country> listOfCountries) {
+    public static void printTop3(List<Country> listOfCountries, String toFile) {
         int top3 = 3;
         Collections.sort(listOfCountries, (o1, o2) -> {
             return (o2.getStandard_rate().subtract(o1.getStandard_rate())).intValue();
@@ -83,13 +77,14 @@ public class Main {
         for (int i = 0; i < top3; i++) {
             if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
                 System.out.println(listOfCountries.get(i));
+                toFile += listOfCountries.get(i);
             } else{
                 top3++;
             }
         }
     }
 
-    public static void printLow3(List<Country> listOfCountries) {
+    public static void printLow3(List<Country> listOfCountries, String toFile) {
         int low3 = 3;
         Collections.sort(listOfCountries, (o1, o2) -> {
             return (o1.getStandard_rate().subtract(o2.getStandard_rate())).intValue();
@@ -97,6 +92,7 @@ public class Main {
         for (int i = 0; i < low3; i++) {
             if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
                 System.out.println(listOfCountries.get(i));
+                toFile += listOfCountries.get(i);
             } else{
                 low3++;
             }

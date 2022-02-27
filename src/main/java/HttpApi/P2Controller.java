@@ -18,7 +18,7 @@ public class P2Controller {
     @GetMapping(value = "/api/searchTop3")
     public String searchTop3() {
         List<Country> listOfCountries = getCountries();
-        Main.printTop3(listOfCountries);
+        Main.printTop3(listOfCountries, null);
         String top3countries = "";
         for (int i = 0; i < 3; i++) {
             top3countries += listOfCountries.get(i);
@@ -41,7 +41,7 @@ public class P2Controller {
     @GetMapping(value = "/api/searchLow3")
     public String searchLow3() {
         List<Country> listOfCountries = getCountries();
-        Main.printLow3(listOfCountries);
+        Main.printLow3(listOfCountries, null);
         String low3countries = "";
         for (int i = 0; i < 3; i++) {
             low3countries += listOfCountries.get(i);

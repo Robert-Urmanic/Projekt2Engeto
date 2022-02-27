@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LoadJson {
+    public static final int lengthOfAbbreviation = 4;
     public static void loadFile(List<Country> listOfCountries) throws IOException, InterruptedException {
         String jsonFile = "https://euvatrates.com/rates.json";
 
@@ -29,6 +30,7 @@ public class LoadJson {
         String unfilteredJson = (String) httpResponse.body();
 
         String parts[] = unfilteredJson.split("\"rates\": \\{");
+        // throwing parts[0] into the trash
         String splitToJsonByWildcard[] = parts[1].split("\"\\w\\w\":");
         String splitForAbbrev[] = Arrays.stream(parts[1].split("\\},")).map(String::trim).toArray(String[]::new);
 
@@ -38,7 +40,7 @@ public class LoadJson {
 
         for (int i = 0; i < splitForAbbrev.length; i++) {
             String tempAbbrevHolder = "";
-            for (int j = 0; j < 4; j++) {
+            for (int j = 0; j < lengthOfAbbreviation; j++) {
                 tempAbbrevHolder += splitForAbbrev[i].charAt(j);
             }
             listOfAbbreviations.add(tempAbbrevHolder);
@@ -55,7 +57,7 @@ public class LoadJson {
 
 
         for (int i = 0; i < listOfAbbreviations.size(); i++) {
-            if (i < 29) {
+            if (i < listOfAbbreviations.size() - 1) {
                 country1 = gson.fromJson(splitToJsonByWildcard[i + 1].replace("},", ",\"abbreviation\": " + listOfAbbreviations.get(i) + "}"), Country.class);
                 listOfCountries.add(country1);
             }
