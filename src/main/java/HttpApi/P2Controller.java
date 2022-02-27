@@ -14,16 +14,12 @@ import java.util.Locale;
 
 @RestController
 public class P2Controller {
-
+    public static final boolean printFile = false;
     @GetMapping(value = "/api/searchTop3")
     public String searchTop3() {
         List<Country> listOfCountries = getCountries();
-        Main.printTop3(listOfCountries, null);
-        String top3countries = "";
-        for (int i = 0; i < 3; i++) {
-            top3countries += listOfCountries.get(i);
-        }
-        return top3countries;
+        String top3Countries = Main.printLowOrTopForApi(listOfCountries, false);;
+        return top3Countries;
     }
 
     private List<Country> getCountries() {
@@ -41,12 +37,9 @@ public class P2Controller {
     @GetMapping(value = "/api/searchLow3")
     public String searchLow3() {
         List<Country> listOfCountries = getCountries();
-        Main.printLow3(listOfCountries, null);
-        String low3countries = "";
-        for (int i = 0; i < 3; i++) {
-            low3countries += listOfCountries.get(i);
-        }
-        return low3countries;
+        String low3Countries = Main.printLowOrTopForApi(listOfCountries, true);
+
+        return low3Countries;
     }
 
     @GetMapping(value = "/api/searchByAbbrev/{abbrev}")

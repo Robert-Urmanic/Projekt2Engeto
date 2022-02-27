@@ -4,37 +4,24 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) {
-        boolean bool = true;
         Scanner scanner = new Scanner(System.in);
         List<Country> listOfCountries = new ArrayList<>();
         try {
             LoadJson.loadFile(listOfCountries);
-            while (bool) {
+            while (true) {
                 printMenu();
                 String choice = scanner.nextLine();
+                boolean isLow;
                 switch (choice.toUpperCase(Locale.ROOT)) {
                     case "SEARCH TOP 3":
-                        String top3countries = "";
-                        printTop3(listOfCountries, top3countries);
-                        System.out.println("Do you want to save these countries into a .txt file? Y/n");
-                        choice = scanner.nextLine();
-                        if ("Y".equals(choice.toUpperCase(Locale.ROOT))) {
-                            FileCreation.setFile(top3countries, "top3Countries");
-                            break;
-                        }
-                        System.out.println("File wasn't created.\n");
+                        isLow = false;
+                        printLowOrTop(listOfCountries, isLow);
                         break;
                     case "SEARCH LOW 3":
-                        String low3countries = "";
-                        printLow3(listOfCountries, low3countries);
-                        System.out.println("Do you want to save these countries into a .txt file? Y/n");
-                        choice = scanner.nextLine();
-                        if ("Y".equals(choice.toUpperCase(Locale.ROOT))) {
-                            FileCreation.setFile(low3countries, "low3Countries");
-                            break;
-                        }
-                        System.out.println("File wasn't created.\n");
+                        isLow = true;
+                        printLowOrTop(listOfCountries, isLow);
                         break;
                     case "SEARCH BY COUNTRY":
                         System.out.println("Enter abbreviation of a country: ");
@@ -69,38 +56,61 @@ public class Main {
         }
     }
 
-    public static void printTop3(List<Country> listOfCountries, String toFile) {
-        int top3 = 3;
-        Collections.sort(listOfCountries, (o1, o2) -> {
-            return (o2.getStandard_rate().subtract(o1.getStandard_rate())).intValue();
-        });
-        for (int i = 0; i < top3; i++) {
-            if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
-                System.out.println(listOfCountries.get(i));
-                toFile += listOfCountries.get(i);
-            } else{
-                top3++;
-            }
-        }
-    }
 
-    public static void printLow3(List<Country> listOfCountries, String toFile) {
+    public static String printLowOrTopForApi(List<Country> listOfCountries, boolean isLow) {
+        String low3Countries = "";
         int low3 = 3;
-        Collections.sort(listOfCountries, (o1, o2) -> {
-            return (o1.getStandard_rate().subtract(o2.getStandard_rate())).intValue();
-        });
+        Scanner scanner = new Scanner(System.in);
+        if (isLow) {
+            Collections.sort(listOfCountries, (o1, o2) -> {
+                return (o1.getStandard_rate().subtract(o2.getStandard_rate())).intValue();
+            });
+        } else if (!isLow) {
+            Collections.sort(listOfCountries, (o1, o2) -> {
+                return (o2.getStandard_rate().subtract(o1.getStandard_rate())).intValue();
+            });
+        }
         for (int i = 0; i < low3; i++) {
             if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
-                System.out.println(listOfCountries.get(i));
-                toFile += listOfCountries.get(i);
-            } else{
+                low3Countries += listOfCountries.get(i);
+            } else {
                 low3++;
             }
         }
+        return low3Countries;
+    }
+
+    public static void printLowOrTop(List<Country> listOfCountries, boolean isLow) {
+        String low3Countries = "";
+        int low3 = 3;
+        Scanner scanner = new Scanner(System.in);
+        if (isLow) {
+            Collections.sort(listOfCountries, (o1, o2) -> {
+                return (o1.getStandard_rate().subtract(o2.getStandard_rate())).intValue();
+            });
+        } else if (!isLow) {
+            Collections.sort(listOfCountries, (o1, o2) -> {
+                return (o2.getStandard_rate().subtract(o1.getStandard_rate())).intValue();
+            });
+        }
+        for (int i = 0; i < low3; i++) {
+            if (listOfCountries.get(i).getCountry() != listOfCountries.get(i + 1).getCountry()) {
+                System.out.println(listOfCountries.get(i));
+                low3Countries += listOfCountries.get(i);
+            } else {
+                low3++;
+            }
+        }
+        System.out.println("Do you want to save these countries into a .txt file? Y/n");
+        String choice = scanner.nextLine();
+        if ("Y".equals(choice.toUpperCase(Locale.ROOT))) {
+            if (isLow) FileCreation.setFile(low3Countries, "low3Countries");
+            else if (!isLow) FileCreation.setFile(low3Countries, "top3Countries");
+        } else System.out.println("File wasn't created.\n");
     }
 
     public static void printMenu() {
-        System.out.println("Choose from the following.\n");
+        System.out.println("Please, choose from the following.\n");
         System.out.println("SEARCH TOP 3 - types out the top 3 countries with highest standart rate (descending)");
         System.out.println("SEARCH LOW 3 - types out the top 3 countries with lowest standart rate (ascending)");
         System.out.println("SEARCH BY COUNTRY - gives the option to search rates of a specific country by entering it's abbreviation");
